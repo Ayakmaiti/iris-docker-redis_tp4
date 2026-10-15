@@ -1,0 +1,7 @@
+FROM python:3.11-bookworm
+WORKDIR /app
+COPY . .
+RUN pip install -r requirements.txt
+ENV MODEL_DIR=/models
+EXPOSE 8000
+CMD ["python", "src/train.py"]

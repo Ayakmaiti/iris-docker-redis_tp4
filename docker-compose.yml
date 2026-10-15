@@ -1,0 +1,34 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.serve.opt
+    image: iris-api:redis
+    ports:
+      - "8000:8000"
+    environment:
+      MODEL_PATH: /models/iris.joblib
+      REDIS_HOST: base
+    volumes:
+      - modele:/models:ro
+    depends_on:
+      base:
+        condition: service_healthy
+
+  base:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  modele:
+    external: true
+    name: iris-docker_iris-model
+
+  redis-data:

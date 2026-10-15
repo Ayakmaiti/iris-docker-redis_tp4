@@ -1,0 +1,23 @@
+services:
+  train:
+    build:
+      context: .
+      dockerfile: Dockerfile.train.opt
+    image: iris-train:opt
+    volumes:
+      - iris-model:/models
+    restart: "no"
+  serve:
+    build:
+      context: .
+      dockerfile: Dockerfile.serve.opt
+    image: iris-serve:opt
+    depends_on:
+      train:
+        condition: service_completed_successfully
+    volumes:
+      - iris-model:/models:ro
+    ports:
+      - "8000:8000"
+volumes:
+  iris-model:

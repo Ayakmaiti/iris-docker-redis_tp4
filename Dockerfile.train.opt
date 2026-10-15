@@ -1,0 +1,16 @@
+FROM python:3.11-slim-bookworm AS builder
+WORKDIR /build
+COPY requirements.txt .
+RUN python -m venv /opt/venv && /opt/venv/bin/pip install --no-cache-dir --only-binary=:all: -r requirements.txt
+
+FROM python:3.11-slim-bookworm AS runtime
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/* \
+    && groupadd -g 10001 app && useradd -u 10001 -g app -m app \
+    && mkdir -p /models && chown app:app /models
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH" PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 MODEL_DIR=/models
+WORKDIR /app
+COPY --chown=app:app src/train.py ./src/train.py
+USER app
+EXPOSE 8000
+ENTRYPOINT ["python", "src/train.py"]

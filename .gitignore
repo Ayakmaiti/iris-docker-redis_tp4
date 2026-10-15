@@ -1,0 +1,21 @@
+# Environnements et caches Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Modèles générés
+*.joblib
+*.pkl
+artifacts/
+models/
+
+# Sauvegardes et fichiers temporaires
+*.bak
+*.log
+~$*

@@ -1,0 +1,5 @@
+image,size_MiB,cold_s,warm_s
+iris-train:naif,1920.6,217.32,36.78
+iris-serve:naif,1920.6,94.33,39.62
+iris-train:opt,596.01,93.14,13.28
+iris-serve:opt,596.01,69.55,12.78
